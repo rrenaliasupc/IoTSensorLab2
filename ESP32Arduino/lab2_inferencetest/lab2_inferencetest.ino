@@ -17,7 +17,7 @@ void setup() {
     Serial.println("__LAB2 GESTURE DETECTION__");
 
     GFX_Init();
-    Gfx_InitialScreen();
+    Gfx_InitialScreen(false);
 
     inference_init();
     Serial.println("Initialization finished.");

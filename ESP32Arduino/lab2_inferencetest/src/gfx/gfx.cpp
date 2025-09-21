@@ -17,7 +17,7 @@
 /* More data bus class: https://github.com/moononournation/Arduino_GFX/wiki/Data-Bus-Class */
 Arduino_DataBus *bus = new Arduino_ESP32SPI(
   EXAMPLE_PIN_NUM_LCD_DC /* DC */, EXAMPLE_PIN_NUM_LCD_CS /* CS */,
-  EXAMPLE_PIN_NUM_LCD_SCLK /* SCK */, EXAMPLE_PIN_NUM_LCD_MOSI /* MOSI */, EXAMPLE_PIN_NUM_LCD_MISO /* MISO */);
+  EXAMPLE_PIN_NUM_LCD_SCLK /* SCK */, EXAMPLE_PIN_NUM_LCD_MOSI /* MOSI */, EXAMPLE_PIN_NUM_LCD_MISO /* MISOc:\Users\rrena\Documents\MERIT\21 - Iot Sensor Systems\Lab2\IoTSensorLab2\ESP32Arduino\lab2_data_capture\src\gfx\gfx.h */);
 
 /* More display class: https://github.com/moononournation/Arduino_GFX/wiki/Display-Class */
 Arduino_GFX *gfx = new Arduino_ST7789(
@@ -51,17 +51,28 @@ void GFX_Init(void)
 
 }
 
-void Gfx_InitialScreen(void)
+void Gfx_InitialScreen(bool IsCapture)
 {
   // Set text parameters
   gfx->setCursor(0, 20);
   gfx->setTextSize(2); // 1 to 6
   gfx->setTextColor(BLUE);
   gfx->println("Gesture Recognition");
-  gfx->setTextSize(1); // 1 to 6
+  gfx->println();
+  if(IsCapture)
+  {
+    gfx->println(" - Capture -");
+  }
+  else
+  {
+    gfx->println(" - Inference -");
+  }
+  gfx->println();
+  gfx->setTextSize(1.5); // 1 to 6
   gfx->println("By:");
   gfx->println(" Pedro Matheus Figueredo Cristaldo");
   gfx->println(" Ricard Renalias Zueras");
+  
   gfx->setTextSize(2); // 1 to 6  
   gfx->println("");
   gfx->setTextColor(WHITE);
@@ -99,7 +110,7 @@ void Gfx_Presenting_RecognitedType(int Type)
 
       break;
     case 1:
-      gfx->fillScreen(GREEN);
+      gfx->fillScreen(ORANGE);
       gfx->setTextColor(WHITE);
       break;
     default:
@@ -112,6 +123,48 @@ void Gfx_Presenting_RecognitedType(int Type)
   gfx->print("Type ");  
   gfx->println(Type);
 
+}
+
+void Gfx_RecordNewGesture(int Type, int Types, int CurrentSample,int TotalSamples)
+{
+  switch(Type)
+  {
+    case 0: gfx->fillScreen(BLUE); break;
+    case 1: gfx->fillScreen(ORANGE); break;
+    default: gfx->fillScreen(BLACK); break;
+  }
+  
+  gfx->setTextColor(WHITE);
+  gfx->setCursor(0, 30);
+  gfx->setTextSize(2); // 1 to 6
+  gfx->println("  Ready for next");
+  gfx->println("     gesture");
+  gfx->println("");
+  gfx->print("SampleType: ");
+  gfx->print(Type+1);
+  gfx->print(" / ");
+  gfx->println(Types);
+  gfx->print("NumSample: ");
+  gfx->print(CurrentSample+1);
+  gfx->print(" / ");
+  gfx->println(TotalSamples);
+  gfx->println("");
+  gfx->println("Press return to");
+  gfx->println("start next sample");
+}
+
+void Gfx_EndDataCollection(void)
+{
+  gfx->fillScreen(GREEN);
+  gfx->setTextColor(WHITE);
+  gfx->setCursor(0, 30);
+  gfx->setTextSize(2); // 1 to 6
+  gfx->println("All data has been");
+  gfx->println(" collected");
+  gfx->println();
+  gfx->println(" Press Return");
+  gfx->println(" to send data"); 
+  gfx->println("using serial port");
 }
 
 void Gfx_print(char* text)
