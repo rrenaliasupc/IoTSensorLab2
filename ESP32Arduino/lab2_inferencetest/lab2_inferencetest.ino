@@ -5,6 +5,7 @@
 
 #include "TestData.h"
 
+#include "src/gfx/gfx.h"
 
 
 /**
@@ -14,6 +15,9 @@ void setup() {
     Serial.begin(115200);
     delay(3000);
     Serial.println("__LAB2 GESTURE DETECTION__");
+
+    GFX_Init();
+    Gfx_InitialScreen();
 
     inference_init();
     Serial.println("Initialization finished.");
@@ -38,8 +42,12 @@ void loop() {
     float Items[NUM_ITEMS_PER_SAMPLE][NUM_CHANNELS];
     
     Serial.println("... Ready for next gesture ...");
+    Gfx_WaitingForGesture();
+
     WaitForActivation();
     Serial.println("... Start Reading Sample ...");
+    Gfx_Recording();
+    
     for(int numItem=0; numItem<NUM_ITEMS_PER_SAMPLE; numItem++)
     {
         
@@ -58,6 +66,7 @@ void loop() {
 
     Serial.print("Predicted Type: ");
     Serial.println(PredictedType);
+    Gfx_Presenting_RecognitedType(PredictedType);
     delay(3000);
 }
 

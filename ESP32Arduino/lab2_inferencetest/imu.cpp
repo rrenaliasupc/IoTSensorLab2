@@ -4,6 +4,7 @@
 #include <Wire.h>
 
 #include "imu.h"
+#include "src/gfx/gfx.h"
 
 #define IMU_ADDRESS 0x6B    //Change to the address of the IMU
 #define PERFORM_CALIBRATION //Comment to disable startup calibration
@@ -11,6 +12,7 @@ QMI8658 IMU;               //Change to the name of any supported IMU!
 
 
 calData calib = { 0 };  //Calibration data
+
 AccelData accelData;    //Sensor data
 GyroData gyroData;
 MagData magData;
@@ -44,6 +46,8 @@ bool IMU_init(void)
 
   delay(5000);
   Serial.println("Keep IMU level.");
+  Gfx_println("Calibrating IMU");
+  Gfx_println("Keep IMU level");
   delay(5000);
   IMU.calibrateAccelGyro(&calib);
   Serial.println("Calibration done!");
