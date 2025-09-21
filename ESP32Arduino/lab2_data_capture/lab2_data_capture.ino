@@ -1,6 +1,8 @@
 #include "FastIMU.h"
 #include <Wire.h>
 
+#include "src/gfx/gfx.h"
+
 #define IMU_ADDRESS 0x6B    //Change to the address of the IMU
 #define PERFORM_CALIBRATION //Comment to disable startup calibration
 QMI8658 IMU;               //Change to the name of any supported IMU! 
@@ -19,6 +21,9 @@ void setup() {
   while (!Serial) {
     ;
   }
+
+  GFX_Init();
+  Gfx_InitialScreen(true);
 
   int err = IMU.init(calib, IMU_ADDRESS);
   if (err != 0) {
@@ -44,6 +49,8 @@ void setup() {
 
   delay(5000);
   Serial.println("Keep IMU level.");
+  Gfx_println("Calibrating IMU");
+  Gfx_println("Keep IMU level");
   delay(5000);
   IMU.calibrateAccelGyro(&calib);
   Serial.println("Calibration done!");
@@ -122,12 +129,15 @@ void loop() {
   }
   if(SampleType>=NUM_TYPES)
   {
-    
+    Serial.println("------------------------------------------");
     Serial.println("------------------------------------------");
     Serial.println("All data has been collected");
-    Serial.println("Press Return to continue");
+    Serial.println("Press Return to send data using serial port.");
+    Gfx_EndDataCollection();
+    while(Serial.read(buffer,1)==0);
     PrintDataCollected();
-    Serial.println("------------------------------------------");
+    Gfx_println("");
+    Gfx_println("  Process finished  ");
     while(1);
   }
 
@@ -140,7 +150,14 @@ void loop() {
   Serial.print(" / ");
   Serial.println(NUM_SAMPLES_FOR_TYPE);
   Serial.println("Press return to start next sample");
+  Gfx_RecordNewGesture(SampleType, NUM_TYPES, NumSample,NUM_SAMPLES_FOR_TYPE);
   while(Serial.read(buffer,1)==0);
+  //Gfx_WaitingForGesture();
+  //WaitForActivation();
+  Serial.println("... Start Reading Sample ...");
+  Gfx_Recording();
+  
+  
 
   for(int numItem=0; numItem<NUM_ITEMS_FOR_SAMPLE; numItem++)
   {
