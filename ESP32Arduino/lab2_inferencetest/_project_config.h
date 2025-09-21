@@ -1,0 +1,12 @@
+#ifndef __PROJECT_CONFIG_H__
+#define __PROJECT_CONFIG_H__
+
+#define __TEST_MODEL__
+
+
+#ifdef __TEST_MODEL__
+#define __USE_INPUTSENSORTESTDATA__
+#define __USE_MODEL_INPUT_NORMALIZED_TEST_DATA__
+#endif __TEST_MODEL__
+
+#endif //__PROJECT_CONFIG_H__
