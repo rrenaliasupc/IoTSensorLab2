@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#include "model.h"
-#include "normalization_params.h"
+#include "src/model/model.h"
+#include "src/model/normalization_params.h"
 // include the runtime specific for your board
 // either tflm_esp32 or tflm_cortexm
 #include <tflm_esp32.h>
@@ -10,7 +10,7 @@
 // now you can include the eloquent tinyml wrapper
 #include <eloquent_tinyml.h>
 
-#include "TestData.h"
+#include "src/model/TestData.h"
 
 #include "inference.h"
 

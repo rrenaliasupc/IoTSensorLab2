@@ -1,9 +1,9 @@
 #include "_project_config.h"
 
-#include "imu.h"
+#include "src/imu/imu.h"
 #include "inference.h"
 
-#include "TestData.h"
+#include "src/model/TestData.h"
 
 #include "src/gfx/gfx.h"
 
@@ -48,6 +48,7 @@ void loop() {
     Serial.println("... Start Reading Sample ...");
     Gfx_Recording();
     
+    PrintItemCaption();
     for(int numItem=0; numItem<NUM_ITEMS_PER_SAMPLE; numItem++)
     {
         
@@ -58,7 +59,7 @@ void loop() {
         Items[numItem][3]=itemData.gyroX;
         Items[numItem][4]=itemData.gyroY;
         Items[numItem][5]=itemData.gyroZ;
-
+        PrintSimplifiedItem(itemData);
         //Read every 20 ms
         delay(20);
     }
@@ -67,8 +68,40 @@ void loop() {
     Serial.print("Predicted Type: ");
     Serial.println(PredictedType);
     Gfx_Presenting_RecognitedType(PredictedType);
+
+    
     delay(3000);
 }
 
 
+void PrintItemCaption(void)
+{
+    Serial.print("accelX");
+    Serial.print("\t"); 
+    Serial.print("accelY");
+    Serial.print("\t");
+    Serial.print("accelZ");
+    Serial.print("\t");
+    Serial.print("gyroX");
+    Serial.print("\t");
+    Serial.print("gyroY");
+    Serial.print("\t");
+    Serial.print("gyroZ");
+    Serial.println();
+}
+void PrintSimplifiedItem(ItemData itemData) 
+{
+    Serial.print(itemData.accelX);
+    Serial.print("\t"); 
+    Serial.print(itemData.accelY);
+    Serial.print("\t");
+    Serial.print(itemData.accelZ);
+    Serial.print("\t");
+    Serial.print(itemData.gyroX);
+    Serial.print("\t");
+    Serial.print(itemData.gyroY);
+    Serial.print("\t");
+    Serial.print(itemData.gyroZ);
+    Serial.println();
+}
 
