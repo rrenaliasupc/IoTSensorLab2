@@ -100,7 +100,7 @@ void Gfx_Recording(void)
   gfx->println("Recording movement");
 }
 
-void Gfx_Presenting_RecognitedType(int Type)
+void Gfx_Presenting_RecognitedType(int Type,float probability)
 {
   switch(Type)
   {
@@ -119,9 +119,14 @@ void Gfx_Presenting_RecognitedType(int Type)
 
   }
   gfx->setTextSize(4); // 1 to 6
-  gfx->setCursor(30, 100);
+  gfx->setCursor(40, 100);
   gfx->print("Type ");  
   gfx->println(Type);
+
+   gfx->setTextSize(2); // 1 to 6
+   gfx->setCursor(20, 140);
+   gfx->print("Probability: ");  
+   gfx->println(probability);
 
 }
 

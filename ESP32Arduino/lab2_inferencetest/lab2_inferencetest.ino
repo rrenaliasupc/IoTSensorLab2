@@ -63,11 +63,15 @@ void loop() {
         //Read every 20 ms
         delay(20);
     }
-    int PredictedType=NormalizeAndInfere(Items);
+    sInferenceResult inferenceResult=NormalizeAndInfere(Items);
+
 
     Serial.print("Predicted Type: ");
-    Serial.println(PredictedType);
-    Gfx_Presenting_RecognitedType(PredictedType);
+    Serial.println(inferenceResult.type);
+    Serial.print("Probability: ");
+    Serial.println(inferenceResult.probability);
+
+    Gfx_Presenting_RecognitedType(inferenceResult.type,inferenceResult.probability);
 
     
     delay(3000);

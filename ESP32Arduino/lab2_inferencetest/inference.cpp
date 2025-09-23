@@ -23,7 +23,7 @@
 Eloquent::TF::Sequential<TF_NUM_OPS, ARENA_SIZE> tf;
 
 
-int NormalizeAndInfere(float inputSensorSample[NUM_ITEMS_PER_SAMPLE][NUM_CHANNELS]);
+sInferenceResult NormalizeAndInfere(float inputSensorSample[NUM_ITEMS_PER_SAMPLE][NUM_CHANNELS]);
 
 bool inference_init(void)
 {
@@ -92,12 +92,16 @@ void TestModelFromSensorData(void)
         Serial.print(NumSample);
         Serial.print(" - ");
         
-        int predictedClass=NormalizeAndInfere(inputSensorData[NumSample]);
+        sInferenceResult inferenceResult=NormalizeAndInfere(inputSensorData[NumSample]);
+        
+
 
         Serial.print("expected class: ");
         Serial.print(expectedOutTestData[NumSample]);
         Serial.print(", predicted class: ");
-        Serial.println(predictedClass);
+        Serial.print(inferenceResult.type);
+        Serial.print(", probability: ");
+        Serial.println("inferenceResult.probability");
     }        
     // how long does it take to run a single prediction?
     Serial.print("It takes ");
@@ -106,8 +110,12 @@ void TestModelFromSensorData(void)
 }
 #endif //__TEST_MODEL__
 
-int NormalizeAndInfere(float inputSensorSample[NUM_ITEMS_PER_SAMPLE][NUM_CHANNELS])
+
+
+sInferenceResult NormalizeAndInfere(float inputSensorSample[NUM_ITEMS_PER_SAMPLE][NUM_CHANNELS])
 {
+    sInferenceResult inferenceResult;
+
     float inputModelData[NUM_MODEL_FEATURES];
     //1- normalize using Zscore and 
     for(int NumItem=0; NumItem<NUM_ITEMS_PER_SAMPLE; NumItem++)
@@ -126,7 +134,21 @@ int NormalizeAndInfere(float inputSensorSample[NUM_ITEMS_PER_SAMPLE][NUM_CHANNEL
     // classify class NumSample
     if (!tf.predict(inputModelData).isOk()) {
         Serial.println(tf.exception.toString());
-        return 0xFF;
+        inferenceResult.result=0;
+        return inferenceResult;
     }
-    return tf.classification;
+
+    Serial.print("Probabilities: ");
+    for(int i=0;i<TF_NUM_OUTPUTS;i++)
+    {
+        Serial.print(tf.out->data.f[i]);
+        Serial.print(" ");
+    }
+    Serial.println("");
+
+    inferenceResult.result=1;
+    inferenceResult.type=tf.classification;
+    inferenceResult.probability=tf.out->data.f[inferenceResult.type];
+
+    return inferenceResult;
 }
