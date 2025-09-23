@@ -70,8 +70,8 @@ void loop() {
   Serial.println("Press return to start next sample");
   Gfx_RecordNewGesture(SampleType, NUM_TYPES, NumSample,NUM_SAMPLES_FOR_TYPE);
   while(Serial.read(buffer,1)==0);
-  //Gfx_WaitingForGesture();
-  //WaitForActivation();
+  Gfx_WaitingForGesture();
+  WaitForActivation();
   Serial.println("... Start Reading Sample ...");
   Gfx_Recording();
   
